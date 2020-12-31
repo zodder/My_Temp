@@ -24,7 +24,7 @@ pass_bin = 'PASS'
 start_time = 'start_time'
 
 ############################################################################
-# i don't kn
+
 
 def search_files_list(pathdir, suffix_list = []):
     file_list = []
