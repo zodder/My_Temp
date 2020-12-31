@@ -9,6 +9,8 @@ import tkinter as tk
 import tkinter.scrolledtext as tkst
 from tkinter import END
 
+import sys
+
 class ErrorInfoList(tk.Toplevel):
     def __init__(self, desc_label='Error list', geo='500x200+300+200'):
         super().__init__()
@@ -31,3 +33,5 @@ class ErrorInfoList(tk.Toplevel):
 
     def quit_prog(self):
         self.destroy()
+        
+

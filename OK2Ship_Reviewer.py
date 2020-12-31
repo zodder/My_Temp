@@ -26,78 +26,101 @@ def log_print(log, txt):
     log.write(txt)
 
 
-class shipScreener(tk.Tk):
+class OK2D_Sorter(tk.Tk):
     def __init__(self):
 
         super().__init__()
         
         self.compare_data_dict = []
         self.settings = {}
+        self.stage_list = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA', 'O/S', 'VCM']
 
 
-        self.title('Camera Test OK2ship Screener V0.01  --- Authorwriter: Zhu Dan')
-        self.geometry('820x640+100+80')
+        self.title('Camera Test OK2Ship Reviewer --- written by Zhu Dan')
+        self.geometry('500x600+200+100')
         
         self.ok2ship_data_path = tk.StringVar()
-        self.label_ok2ship_path = tk.Label(self, text='Pending for OK2Delivery parts list folder:')
-        self.entry_ok2ship_path = tk.Entry(self, width=40, textvariable=self.ok2ship_data_path)
+        self.label_ok2ship_path = tk.Label(self, text='Pending for OK2Ship parts list folder:')
+        self.entry_ok2ship_path = tk.Entry(self, width=30, textvariable=self.ok2ship_data_path)
         
         self.output_data_path = tk.StringVar()
         self.label_output_path = tk.Label(self, text='Output Data Path:')
-        self.entry_output_path = tk.Entry(self, width=40, textvariable=self.output_data_path)
+        self.entry_output_path = tk.Entry(self, width=30, textvariable=self.output_data_path)
         
         self.label_data_type = tk.Label(self, text='Data Stage')
         self.label_data_link = tk.Label(self, text='Data Folder')
         self.label_allowed_retest = tk.Label(self, text='Maximum Allowed Times\n(0 means no limit)')
         
+
+        self.data_link0 = tk.StringVar()
+        self.retest_allowed0 = tk.IntVar()
+        self.combo_data_type0 = ttk.Combobox(width=12)
+        self.combo_data_type0['value'] = self.stage_list
+        self.entry_data_link0 = tk.Entry(self, width=30, textvariable=self.data_link0)
+        self.entry_retest_allowed0 = tk.Entry(self, width=12, textvariable=self.retest_allowed0)
+
         #self.data_type1 = tk.StringVar()
         self.data_link1 = tk.StringVar()
         self.retest_allowed1 = tk.IntVar()
         #self.entry_data_type1 = tk.Entry(self, width=12, textvariable=self.data_type1)
         self.combo_data_type1 = ttk.Combobox(width=12)
-        self.combo_data_type1['value'] = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA']
-        self.entry_data_link1 = tk.Entry(self, width=40, textvariable=self.data_link1)
+        self.combo_data_type1['value'] = self.stage_list
+        self.entry_data_link1 = tk.Entry(self, width=30, textvariable=self.data_link1)
         self.entry_retest_allowed1 = tk.Entry(self, width=12, textvariable=self.retest_allowed1)
         
         # self.data_type2 = tk.StringVar()
         self.data_link2 = tk.StringVar()
         self.retest_allowed2 = tk.IntVar()
         self.combo_data_type2 = ttk.Combobox(width=12)
-        self.combo_data_type2['value'] = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA']
-        self.entry_data_link2 = tk.Entry(self, width=40, textvariable=self.data_link2)
+        self.combo_data_type2['value'] = self.stage_list
+        self.entry_data_link2 = tk.Entry(self, width=30, textvariable=self.data_link2)
         self.entry_retest_allowed2 = tk.Entry(self, width=12, textvariable=self.retest_allowed2)
         
         # self.data_type3 = tk.StringVar()
         self.data_link3 = tk.StringVar()
         self.retest_allowed3 = tk.IntVar()
         self.combo_data_type3 = ttk.Combobox(width=12)
-        self.combo_data_type3['value'] = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA']
-        self.entry_data_link3 = tk.Entry(self, width=40, textvariable=self.data_link3)
+        self.combo_data_type3['value'] = self.stage_list
+        self.entry_data_link3 = tk.Entry(self, width=30, textvariable=self.data_link3)
         self.entry_retest_allowed3 = tk.Entry(self, width=12, textvariable=self.retest_allowed3)
         
         # self.data_type4 = tk.StringVar()
         self.data_link4 = tk.StringVar()
         self.retest_allowed4 = tk.IntVar()
         self.combo_data_type4 = ttk.Combobox(width=12)
-        self.combo_data_type4['value'] = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA']
-        self.entry_data_link4 = tk.Entry(self, width=40, textvariable=self.data_link4)
+        self.combo_data_type4['value'] = self.stage_list
+        self.entry_data_link4 = tk.Entry(self, width=30, textvariable=self.data_link4)
         self.entry_retest_allowed4 = tk.Entry(self, width=12, textvariable=self.retest_allowed4)
         
         # self.data_type5 = tk.StringVar()
         self.data_link5 = tk.StringVar()
         self.retest_allowed5 = tk.IntVar()
         self.combo_data_type5 = ttk.Combobox(width=12)
-        self.combo_data_type5['value'] = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA']
-        self.entry_data_link5 = tk.Entry(self, width=40, textvariable=self.data_link5)
+        self.combo_data_type5['value'] = self.stage_list
+        self.entry_data_link5 = tk.Entry(self, width=30, textvariable=self.data_link5)
         self.entry_retest_allowed5 = tk.Entry(self, width=12, textvariable=self.retest_allowed5)
         
         # self.data_type6 = tk.StringVar()
         self.data_link6 = tk.StringVar()
         self.retest_allowed6 = tk.IntVar()
         self.combo_data_type6 = ttk.Combobox(width=12)
-        self.combo_data_type6['value'] = ['AF_UP', 'AF_DOWN', 'CCL', 'FQC', 'OBA']
-        self.entry_data_link6 = tk.Entry(self, width=40, textvariable=self.data_link6)
+        self.combo_data_type6['value'] = self.stage_list
+        self.entry_data_link6 = tk.Entry(self, width=30, textvariable=self.data_link6)
         self.entry_retest_allowed6 = tk.Entry(self, width=12, textvariable=self.retest_allowed6)
+        
+        self.data_link7 = tk.StringVar()
+        self.retest_allowed7 = tk.IntVar()
+        self.combo_data_type7 = ttk.Combobox(width=12)
+        self.combo_data_type7['value'] = self.stage_list
+        self.entry_data_link7 = tk.Entry(self, width=30, textvariable=self.data_link7)
+        self.entry_retest_allowed7 = tk.Entry(self, width=12, textvariable=self.retest_allowed7)
+        
+        self.data_link8 = tk.StringVar()
+        self.retest_allowed8 = tk.IntVar()
+        self.combo_data_type8 = ttk.Combobox(width=12)
+        self.combo_data_type8['value'] = self.stage_list
+        self.entry_data_link8 = tk.Entry(self, width=30, textvariable=self.data_link8)
+        self.entry_retest_allowed8 = tk.Entry(self, width=12, textvariable=self.retest_allowed8)
         
         self.start_button = tk.Button(self, command=self.screen, text="Start", width=12)
         self.quit_button = tk.Button(self, command=self.self_quit, text="Quit", width=12)
@@ -107,60 +130,73 @@ class shipScreener(tk.Tk):
         self.ui_arrange()
         
     def ui_arrange(self):
-        self.label_ok2ship_path.place(x=40, y=100)
-        self.entry_ok2ship_path.place(x=300, y=100)
+        self.label_ok2ship_path.place(x=40, y=30)
+        self.entry_ok2ship_path.place(x=270, y=30)
         
-        self.label_output_path.place(x=40, y=540)
-        self.entry_output_path.place(x=300, y=540)
+        self.label_output_path.place(x=120, y=500)
+        self.entry_output_path.place(x=270, y=500)
         
-        self.start_button.place(x=80, y=600)
-        self.quit_button.place(x=560, y=600)
-        self.save_settings_button.place(x=240, y=600)
-        self.load_settings_button.place(x=400, y=600)
+        self.start_button.place(x=30, y=560)
+        self.quit_button.place(x=390, y=560)
+        self.save_settings_button.place(x=140, y=560)
+        self.load_settings_button.place(x=260, y=560)
         
-        self.label_data_type.place(x=40, y=150)
-        self.label_data_link.place(x=160, y=150)
-        self.label_allowed_retest.place(x=400, y=150)
+        self.label_data_type.place(x=40, y=80)
+        self.label_data_link.place(x=190, y=80)
+        self.label_allowed_retest.place(x=340, y=80)
         
         #self.entry_data_type1.place(x=30, y=200)
-        self.combo_data_type1.place(x=30,y=200)
-        self.entry_data_link1.place(x=150,y=200)
-        self.entry_retest_allowed1.place(x=430, y=200)
         
-        self.combo_data_type2.place(x=30,y=250)
-        self.entry_data_link2.place(x=150,y=250)
-        self.entry_retest_allowed2.place(x=430, y=250)
+        self.combo_data_type0.place(x=30,y=120)
+        self.entry_data_link0.place(x=150,y=120)
+        self.entry_retest_allowed0.place(x=370, y=120)
+        
+        self.combo_data_type1.place(x=30,y=160)
+        self.entry_data_link1.place(x=150,y=160)
+        self.entry_retest_allowed1.place(x=370, y=160)
+        
+        self.combo_data_type2.place(x=30,y=200)
+        self.entry_data_link2.place(x=150,y=200)
+        self.entry_retest_allowed2.place(x=370, y=200)
                
-        self.combo_data_type3.place(x=30,y=300)
-        self.entry_data_link3.place(x=150,y=300)
-        self.entry_retest_allowed3.place(x=430, y=300)
+        self.combo_data_type3.place(x=30,y=240)
+        self.entry_data_link3.place(x=150,y=240)
+        self.entry_retest_allowed3.place(x=370, y=240)
 
-        self.combo_data_type4.place(x=30, y=350)
-        self.entry_data_link4.place(x=150,y=350)
-        self.entry_retest_allowed4.place(x=430, y=350)
+        self.combo_data_type4.place(x=30, y=280)
+        self.entry_data_link4.place(x=150,y=280)
+        self.entry_retest_allowed4.place(x=370, y=280)
         
-        self.combo_data_type5.place(x=30, y=400)
-        self.entry_data_link5.place(x=150,y=400)
-        self.entry_retest_allowed5.place(x=430, y=400)
+        self.combo_data_type5.place(x=30, y=320)
+        self.entry_data_link5.place(x=150,y=320)
+        self.entry_retest_allowed5.place(x=370, y=320)
 
-        self.combo_data_type6.place(x=30, y=450)
-        self.entry_data_link6.place(x=150,y=450)
-        self.entry_retest_allowed6.place(x=430, y=450)
+        self.combo_data_type6.place(x=30, y=360)
+        self.entry_data_link6.place(x=150,y=360)
+        self.entry_retest_allowed6.place(x=370, y=360)
         
-        self.ok2ship_data_path.set('.\OK2D_Data\OK2Delivery')
-        self.output_data_path.set('.\OK2D_Data\Output')
+        self.combo_data_type7.place(x=30, y=400)
+        self.entry_data_link7.place(x=150,y=400)
+        self.entry_retest_allowed7.place(x=370, y=400)
         
-        self.data_link1.set('.\OK2D_Data\AF_UP')
-        self.data_link2.set('.\OK2D_Data\AF_DOWN')
-        self.data_link3.set('.\OK2D_Data\CCL')
-        self.data_link4.set('.\OK2D_Data\FQC')
-        self.data_link5.set('.\OK2D_Data\OBA')
+        self.combo_data_type8.place(x=30, y=440)
+        self.entry_data_link8.place(x=150,y=440)
+        self.entry_retest_allowed8.place(x=370, y=440)
         
-        self.combo_data_type1.current(0)
-        self.combo_data_type2.current(1)
-        self.combo_data_type3.current(2)
-        self.combo_data_type4.current(3)
-        self.combo_data_type5.current(4)
+        self.ok2ship_data_path.set('.\OK2S_Data\OK2Ship')
+        self.output_data_path.set('.\OK2S_Data\Output')
+        
+        self.data_link0.set('.\OK2S_Data\AF_UP')
+        self.data_link1.set('.\OK2S_Data\AF_DOWN')
+        self.data_link2.set('.\OK2S_Data\CCL')
+        self.data_link3.set('.\OK2S_Data\FQC')
+        self.data_link4.set('.\OK2S_Data\OBA')
+        
+        self.combo_data_type0.current(0)
+        self.combo_data_type1.current(1)
+        self.combo_data_type2.current(2)
+        self.combo_data_type3.current(3)
+        self.combo_data_type4.current(4)
 
         
     def self_quit(self):
@@ -196,40 +232,62 @@ class shipScreener(tk.Tk):
         
         len_data = len(data_info_dict)
         if len_data > 0:
-            data1_dict = data_info_dict[0]
+            data0_dict = data_info_dict[0]
+            self.combo_data_type0.set(data0_dict['type'])
+            self.data_link0.set(data0_dict['link'])
+            self.retest_allowed0.set(int(data0_dict['retest']))
+        if len_data > 1:
+            data1_dict = data_info_dict[1]
             self.combo_data_type1.set(data1_dict['type'])
             self.data_link1.set(data1_dict['link'])
             self.retest_allowed1.set(int(data1_dict['retest']))
-        if len_data > 1:
-            data2_dict = data_info_dict[1]
+        if len_data > 2:
+            data2_dict = data_info_dict[2]
             self.combo_data_type2.set(data2_dict['type'])
             self.data_link2.set(data2_dict['link'])
             self.retest_allowed2.set(int(data2_dict['retest']))
-        if len_data > 2:
-            data3_dict = data_info_dict[2]
+        if len_data > 3:
+            data3_dict = data_info_dict[3]
             self.combo_data_type3.set(data3_dict['type'])
             self.data_link3.set(data3_dict['link'])
             self.retest_allowed3.set(int(data3_dict['retest']))
-        if len_data > 3:
-            data4_dict = data_info_dict[3]
+        if len_data > 4:
+            data4_dict = data_info_dict[4]
             self.combo_data_type4.set(data4_dict['type'])
             self.data_link4.set(data4_dict['link'])
-            self.retest_allowed4.set(int(data4_dict['retest']))
-        if len_data > 4:
-            data5_dict = data_info_dict[4]
+            self.retest_allowed4.set(int(data4_dict['retest']))            
+        if len_data > 5:
+            data5_dict = data_info_dict[5]
             self.combo_data_type5.set(data5_dict['type'])
             self.data_link5.set(data5_dict['link'])
-            self.retest_allowed5.set(int(data5_dict['retest']))            
-        if len_data > 5:
-            data6_dict = data_info_dict[5]
+            self.retest_allowed5.set(int(data5_dict['retest']))
+        if len_data > 6:
+            data6_dict = data_info_dict[6]
             self.combo_data_type6.set(data6_dict['type'])
             self.data_link6.set(data6_dict['link'])
-            self.retest_allowed6.set(int(data6_dict['retest'])) 
+            self.retest_allowed6.set(int(data6_dict['retest']))
+        if len_data > 7:
+            data7_dict = data_info_dict[7]
+            self.combo_data_type7.set(data7_dict['type'])
+            self.data_link7.set(data7_dict['link'])
+            self.retest_allowed7.set(int(data7_dict['retest']))
+        if len_data > 8:
+            data8_dict = data_info_dict[8]
+            self.combo_data_type8.set(data8_dict['type'])
+            self.data_link8.set(data8_dict['link'])
+            self.retest_allowed8.set(int(data8_dict['retest']))
         
         msgbox.showinfo(title=None, message='Already load the settings')
     
     def collect_comp_data(self):
         self.compare_data_dict = []
+        if len(self.combo_data_type0.get())>0:
+            data0_dict = {'type': self.combo_data_type0.get(),
+                          'link': self.data_link0.get(),
+                          'retest': self.retest_allowed0.get()
+                }
+            self.compare_data_dict.append(data0_dict)
+            
         if len(self.combo_data_type1.get())>0:
             data1_dict = {'type': self.combo_data_type1.get(),
                           'link': self.data_link1.get(),
@@ -243,14 +301,14 @@ class shipScreener(tk.Tk):
                           'retest': self.retest_allowed2.get()
                 }
             self.compare_data_dict.append(data2_dict)
-            
+        
         if len(self.combo_data_type3.get())>0:
             data3_dict = {'type': self.combo_data_type3.get(),
                           'link': self.data_link3.get(),
                           'retest': self.retest_allowed3.get()
                 }
             self.compare_data_dict.append(data3_dict)
-
+        
         if len(self.combo_data_type4.get())>0:
             data4_dict = {'type': self.combo_data_type4.get(),
                           'link': self.data_link4.get(),
@@ -266,12 +324,26 @@ class shipScreener(tk.Tk):
             self.compare_data_dict.append(data5_dict)
             
         if len(self.combo_data_type6.get())>0:
-            data5_dict = {'type': self.combo_data_type6.get(),
+            data6_dict = {'type': self.combo_data_type6.get(),
                           'link': self.data_link6.get(),
                           'retest': self.retest_allowed6.get()
                 }
-            self.compare_data_dict.append(data5_dict)
-    
+            self.compare_data_dict.append(data6_dict)
+            
+        if len(self.combo_data_type7.get())>0:
+            data7_dict = {'type': self.combo_data_type7.get(),
+                          'link': self.data_link7.get(),
+                          'retest': self.retest_allowed7.get()
+                }
+            self.compare_data_dict.append(data7_dict)
+            
+        if len(self.combo_data_type8.get())>0:
+            data8_dict = {'type': self.combo_data_type8.get(),
+                          'link': self.data_link8.get(),
+                          'retest': self.retest_allowed8.get()
+                }
+            self.compare_data_dict.append(data8_dict)
+        
     def screen(self):
         
         if len(self.ok2ship_data_path.get()) == 0:
@@ -285,7 +357,7 @@ class shipScreener(tk.Tk):
             with open(self.target_datalog, 'w') as datalog:
                 print('\n\n\n')
 
-                log_print(datalog, 'Start to check the OK2Delivery parts in the folder of %s at the time of %s ... \n\n' % (self.output_data_path.get(), start_time_str))
+                log_print(datalog, 'Start to check the OK2Ship parts in the folder of %s at the time of %s ... \n\n' % (self.output_data_path.get(), start_time_str))
                 log_print(datalog, '====================================================\n')
                 log_print(datalog, 'Import the data from OK2Ship list...\n')
                 
@@ -295,6 +367,7 @@ class shipScreener(tk.Tk):
                     msgbox.showerror(title=None, message = 'No serial ID data could be found in the OK2ship list')
                     log_print(datalog, 'No serial ID data could be found in the OK2ship list! --- Program Terminated\n')
                 else:
+                    
                     self.OK2SHIP.calc_retest()
                     log_print(datalog, '\n')
                     if self.OK2SHIP.retest_count > 0:
@@ -303,7 +376,7 @@ class shipScreener(tk.Tk):
                         repeating_window = ErrorInfoList(desc_label='Repeating_parts')
                         repeating_window.input_text(self.OK2SHIP.retest_serial)
                         self.wait_window(repeating_window)
-                        log_print(datalog, 'Some repeating serial IDs could be found in the ok2delivery list:')
+                        log_print(datalog, 'Some repeating serial IDs could be found in the ok2ship list:')
                         for each_id in self.OK2SHIP.retest_serial:
                             log_print(datalog, each_id + '\n')
                     else:
@@ -311,6 +384,7 @@ class shipScreener(tk.Tk):
                     log_print(datalog, '\n')
                     self.collect_comp_data()
                     self.checking_id_list = self.OK2SHIP.uni_serial
+                    log_print(datalog, '---------------------------------------------------\n\n')
                     
                     for comp_data in self.compare_data_dict:
                         stage_issue_part_list = []
@@ -368,5 +442,5 @@ class shipScreener(tk.Tk):
 
         
 if __name__ == '__main__':
-    screener = shipScreener()
-    screener.mainloop()
+    Sorter = OK2D_Sorter()
+    Sorter.mainloop()

@@ -1,34 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Aug 21 11:37:16 2020
 
-@author: zddan
-
-@V1.00 
-@V2.00  2020/10/09
-@V2.10  2020/10/10
-    1. fix the bug of exporting file name
-    2. add the function to load raw data excel/csv file for id comparison
-    3. add refresh button
-    4. add the function to summarize how many files are imported correct or not, ensure the date load will not be terminated if the data is not correct
-    5. fix other minor bugs
-@V2.11 2020/10/16
-    fix the bug of data exportation will remove the column of 'real_fixture_id'
-@V2.20  2020/11/26
-    Modify a lot of functions:
-    1. fix several function bugs
-    2. add retest calculation 
-    3. add First yield calculation
-@V2.21 2020/12/04
-    1. modify some read data functions based on the data from other supplier
-    2. Program is able to show the list of wrong data files and parts list which could not be searched
-@V2.22 2020/12/11
-    1. Create a new plugin called 'TestWindow' which contains sub-windows in usage
-@V2.23 2020/12/23
-    1. Finetune the function of data exportation - add the head in the csv file
-    2. Fix the bug of data summary
-
-"""
 
 import tkinter as tk
 import tkinter.filedialog as filedialog
@@ -58,8 +29,8 @@ class dataCombiner(tk.Tk):
         super().__init__()
 
         self.missing_list = []
-        self.title('Camera Test Data combiner V2.22  --- Authorwriter: Zhu Dan')
-        self.geometry('820x640+100+80')
+        self.title('Camera Test Data combiner -- written by Zhu Dan')
+        self.geometry('820x640+200+100')
 
         self.test_data_path = tk.StringVar()
         self.test_data_file = tk.StringVar()

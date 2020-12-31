@@ -24,61 +24,19 @@ pass_bin = 'PASS'
 start_time = 'start_time'
 
 ############################################################################
+# i don't kn
 
-class SeriesData:
-    def __init__(self, raw_data):
-        self.value = raw_data
-        if len(self.value) > 0:
-            self.min = np.min(self.value)
-            self.max = np.max(self.value)
+def search_files_list(pathdir, suffix_list = []):
+    file_list = []
+    for root, folders, files in os.walk(pathdir):
+        if len(suffix_list) > 0:
+            for file in files:
+                if os.path.splitext(file)[1] in suffix_list:
+                    file_list.append(os.path.join(root, file))
         else:
-            self.min = self.max = np.nan
-        self.count = len(self.value)
-        self.sum = np.sum(self.value)
-        self.hi_limit = self.lo_limit = 0
-        # self.sumsqrs = np.sum([value*value for value in values])
-        try:
-            self.mean = np.mean(self.value) if self.count > 0 else None
-        except:
-            print(raw_data)    
-        self.median = np.median(self.value)
-
-        # self.median = self.q2 = self.values[self.count/2]
-        self.std = np.std(self.value, ddof=1)
-        self.cpk = 'NA'
-        self.cp = 0
-        self.lo_failure_count = self.hi_failure_count = 0
-        self.failure_count = 0
-
-        self.dev_rate = 0
-
-    def adapt_limit(self, Hi_limit, Lo_limit):
-
-        self.hi_limit = Hi_limit
-        self.lo_limit = Lo_limit
-
-        if self.std == 0 or len(self.value)==0:
-            self.cpu = self.cpl = self.cp = self.cpk = 'Inf'
-        else:
-
-            self.cpu = np.nan if np.isnan(Hi_limit) else (Hi_limit - self.mean) / 3 / self.std
-            self.cpl = np.nan if np.isnan(Lo_limit) else (self.mean - Lo_limit) / 3 / self.std
-
-            if np.isnan(Hi_limit) and not np.isnan(Lo_limit):
-                self.cp = self.cpk = self.cpl
-                self.lo_failure_count = len(self.value[self.value < Lo_limit])
-            elif np.isnan(Lo_limit) and not np.isnan(Hi_limit):
-                self.cp = self.cpk = self.cpu
-                self.hi_failure_count = len(self.value[self.value > Hi_limit])
-            elif np.isnan(Hi_limit) and np.isnan(Lo_limit):
-                self.cp = 'NA'
-            else:
-                self.hi_failure_count = len(self.value[self.value > Hi_limit])
-                self.lo_failure_count = len(self.value[self.value < Lo_limit])
-                self.cp = (Hi_limit - Lo_limit) / 6 / self.std
-                self.cpk = min(self.cpu, self.cpl)
-
-            self.failure_count = self.hi_failure_count + self.lo_failure_count
+            for file in files:
+                file_list.append(os.path.join(root, file))
+    return file_list
 
 
 def sort_dict(yield_dict, keep_count=7):
@@ -145,7 +103,7 @@ def read_spec(file_path):  # 从file的前面几行（2~5），首单元格名�
    
     if os.path.splitext(file_name)[1] in ['.CSV', '.csv']:
         with open(file_path, 'r') as csvdata:
-            content_csv = csv.reader(csvdata)
+            content_csv = csv.reader((line.replace('\0','') for line in csvdata), delimiter=",")
             content_rows = [row for row in content_csv]
         head_content = content_rows[:5]
         try:
@@ -176,6 +134,62 @@ def read_spec(file_path):  # 从file的前面几行（2~5），首单元格名�
     return head_content, primary_spec
 
 
+class SeriesData:
+    def __init__(self, raw_data):
+        self.value = raw_data
+        if len(self.value) > 0:
+            self.min = np.min(self.value)
+            self.max = np.max(self.value)
+        else:
+            self.min = self.max = np.nan
+        self.count = len(self.value)
+        self.sum = np.sum(self.value)
+        self.hi_limit = self.lo_limit = 0
+        # self.sumsqrs = np.sum([value*value for value in values])
+        try:
+            self.mean = np.mean(self.value) if self.count > 0 else None
+        except:
+            print(raw_data)    
+        self.median = np.median(self.value)
+
+        # self.median = self.q2 = self.values[self.count/2]
+        self.std = np.std(self.value, ddof=1)
+        self.cpk = 'NA'
+        self.cp = 0
+        self.lo_failure_count = self.hi_failure_count = 0
+        self.failure_count = 0
+
+        self.dev_rate = 0
+
+    def adapt_limit(self, Hi_limit, Lo_limit):
+
+        self.hi_limit = Hi_limit
+        self.lo_limit = Lo_limit
+
+        if self.std == 0 or len(self.value)==0:
+            self.cpu = self.cpl = self.cp = self.cpk = 'Inf'
+        else:
+
+            self.cpu = np.nan if np.isnan(Hi_limit) else (Hi_limit - self.mean) / 3 / self.std
+            self.cpl = np.nan if np.isnan(Lo_limit) else (self.mean - Lo_limit) / 3 / self.std
+
+            if np.isnan(Hi_limit) and not np.isnan(Lo_limit):
+                self.cp = self.cpk = self.cpl
+                self.lo_failure_count = len(self.value[self.value < Lo_limit])
+            elif np.isnan(Lo_limit) and not np.isnan(Hi_limit):
+                self.cp = self.cpk = self.cpu
+                self.hi_failure_count = len(self.value[self.value > Hi_limit])
+            elif np.isnan(Hi_limit) and np.isnan(Lo_limit):
+                self.cp = 'NA'
+            else:
+                self.hi_failure_count = len(self.value[self.value > Hi_limit])
+                self.lo_failure_count = len(self.value[self.value < Lo_limit])
+                self.cp = (Hi_limit - Lo_limit) / 6 / self.std
+                self.cpk = min(self.cpu, self.cpl)
+
+            self.failure_count = self.hi_failure_count + self.lo_failure_count
+
+
 class TestData:
     def __init__(self, pathdir='', raw_data=pd.DataFrame(), header_count=5,
                  print_file_name = True,
@@ -199,22 +213,24 @@ class TestData:
 
         if len(pathdir) > 0:
             if os.path.isdir(pathdir):
-                files_list = [file for file in os.listdir(pathdir) if not file.startswith('~') or file.startswith('.')]
+                files_list = [file for file in search_files_list(pathdir, suffix_list=['.csv', '.CSV', '.xlsx', '.XLSX']) if not file.startswith('~') or file.startswith('.')]
+                # print(files_list)
                 if len(files_list) > 0:
                     if len(files_list[0]) > 0 and len(self.spec) == 0:
-                        self.head_rows, self.spec = read_spec(os.path.join(pathdir, files_list[0]))
+                        self.head_rows, self.spec = read_spec(files_list[0])
                     for single_file in files_list:
                         feedback_code = 0
-                        single_data, feedback_code = open_data(pathdir, single_file)
+                        single_path = os.path.split(single_file)
+                        single_data, feedback_code = open_data(single_path[0], single_path[1])
                         try:
                             self.value = pd.concat([self.value, single_data])
                         except:
-                            print('!!!!!!!!!!The data from ' + str(single_file) +
+                            print('!!!!!!!!!!The data from ' + str(single_path[1]) +
                                   ' cannot be merged correctly!')
                             feedback_code = 2
                         if feedback_code == 1:
                             if print_file_name:
-                                print(single_file)
+                                print(single_path[1])
                             self.read_file_list.append(single_file)
                         elif feedback_code == 2 or feedback_code == 0:
                             self.wrong_file_list.append(single_file)
@@ -314,6 +330,9 @@ class TestData:
     
     def __len__(self):
         return len(self.value)
+    
+    def __add__(self, second_data):
+        return TestData(raw_data=pd.concat([self.value, second_data.value]), spec=self.spec, head_rows= self.head_rows)
     
     def check_id(self, sid):
         sid = sid.replace("'","")
