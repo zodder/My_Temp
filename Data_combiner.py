@@ -23,6 +23,12 @@ plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 # af_folder = r'C:\MyWork\Work\Python\Camera_data_analysis\2306819'
 
+
+class Bar(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        
+
 class dataCombiner(tk.Tk):
     def __init__(self):
 
@@ -30,7 +36,7 @@ class dataCombiner(tk.Tk):
 
         self.missing_list = []
         self.title('Camera Test Data combiner -- written by Zhu Dan')
-        self.geometry('820x640+200+100')
+        self.geometry('820x660+200+100')
 
         self.test_data_path = tk.StringVar()
         self.test_data_file = tk.StringVar()
@@ -57,6 +63,9 @@ class dataCombiner(tk.Tk):
         self.retest_data_button = tk.Button(self, command=self.calc_retest_data, text='Calc Retest', width=12)
         self.quit_button = tk.Button(self, command=self.self_quit, text="Quit", width=12)
 
+        self.progress = ttk.Progressbar(self, orient="horizontal",
+                                        length=750, mode="determinate")
+
         self.ui_arrange()
 
     def ui_arrange(self):
@@ -79,6 +88,7 @@ class dataCombiner(tk.Tk):
         self.split_station_fixture_button.place(x=160, y=580)
         self.retest_data_button.place(x=360, y=580)
         self.quit_button.place(x=520, y=580)
+        
 
     def merge_data(self):
         '''
@@ -96,7 +106,9 @@ class dataCombiner(tk.Tk):
             msgbox.showerror(title='Hi', message="Don't input folder or file information at the same time")
         else:
             if len(pathdir) > 0 and len(filepath) == 0:
-                self.big_raw_data = TestData(pathdir=pathdir)
+                self.progress.place(x=30, y=620)
+                self.big_raw_data = TestData(pathdir=pathdir, pbar = (self, self.progress))
+                
             elif len(pathdir) == 0 and len(filepath) > 0:
                 self.big_raw_data = TestData(pathdir=filepath)
             self.refresh_data()
@@ -110,7 +122,7 @@ class dataCombiner(tk.Tk):
                 error_file_window.title('Read Error Files')
                 error_file_window.input_text(self.big_raw_data.wrong_file_list)
                 self.wait_window(error_file_window)
-
+        self.progress.forget()
         # print(self.big_raw_data.value.columns)
 
     def refresh_data(self):
