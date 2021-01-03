@@ -14,6 +14,7 @@ from collections import Counter
 import seaborn as sns
 import matplotlib.pyplot as plt
 import csv
+from tkinter import ttk
 
 ####### define the default columns names useed in the test data ############
 serial_id = 'serial_id'
@@ -68,7 +69,7 @@ def open_data(folderpath, filename):
                 feedback_code = 2
 
         elif os.path.splitext(filename)[1] in ['.xlsx', '.XLSX', '.xls', '.XLS']:
-            # print('This is a xls file')
+            # print('This is an xls file')
             try:
                 read_content = pd.read_excel(os.path.join(folderpath, filename), header=i, index_col=False, low_memory=False)
             except:
@@ -78,7 +79,7 @@ def open_data(folderpath, filename):
             pass
 
         if serial_id in read_content.columns:
-            #print(str(filename))
+            # print(str(filename))
             
             feedback_code = 1
             break
@@ -195,8 +196,8 @@ class TestData:
                  print_file_name = True,
                  spec=pd.DataFrame(), 
                  head_rows=[],
-                 input_id='Main'
-                 
+                 input_id='Main',
+                 pbar = None
                  ):
         self.value = pd.DataFrame()
         self.yield_value = 0
@@ -210,10 +211,18 @@ class TestData:
         self.pass_count = 0
         self.retest_sum = pd.DataFrame()
         self.retest_pass_count = self.retest_total_count = self.retest_pass_count = self.retest_count= 0
+        self.files_count = 0
+
+
 
         if len(pathdir) > 0:
             if os.path.isdir(pathdir):
                 files_list = [file for file in search_files_list(pathdir, suffix_list=['.csv', '.CSV', '.xlsx', '.XLSX']) if not file.startswith('~') or file.startswith('.')]
+                self.files_count = len(files_list)
+                if isinstance(pbar[1], ttk.Progressbar):
+                    root, bar = pbar
+                    bar['maximum'] = self.files_count
+                    bar['value'] = 0
                 # print(files_list)
                 if len(files_list) > 0:
                     if len(files_list[0]) > 0 and len(self.spec) == 0:
@@ -235,11 +244,15 @@ class TestData:
                         elif feedback_code == 2 or feedback_code == 0:
                             self.wrong_file_list.append(single_file)
                             print('The file ' + str(single_file) + ' cannot be read correctly')
+                        if isinstance(pbar[1], ttk.Progressbar):
+                            bar['value'] +=1
+                            root.update()
                 else:
                     print('There is no files in the target folder...')
 
             elif os.path.isfile(pathdir):
                 feedback_code = 0
+                self.files_count = 1
                 self.value, feedback_code = open_data(os.path.split(pathdir)[0], os.path.split(pathdir)[1])
                 if len(self.spec) == 0:
                     self.head_rows, self.spec = read_spec(pathdir)
@@ -485,9 +498,9 @@ class TestData:
 
     def calc_retest(self):
         # serial_dict = { serial_id: self.uni_serial }
-        self.retest_sum= pd.DataFrame({ serial_id: self.uni_serial })
+        self.retest_sum= pd.DataFrame({ serial_id: self.uni_serial })   # generate a new dataframe with uni_serial id in the list
         self.retest_sum['Retest_times'] = 0
-        retest_count = Counter(np.array(self.value[serial_id]))
+        retest_count = Counter(np.array(self.value[serial_id]))   # calculate the test count of each id
         self.retest_sum['Retest_times'] = self.retest_sum[serial_id].apply(lambda x: retest_count[x])
         self.retest_sum.drop(self.retest_sum[self.retest_sum['Retest_times'] < 2].index, inplace = True)
         self.retest_count = len(self.retest_sum)
