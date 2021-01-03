@@ -213,11 +213,15 @@ class TestData:
         self.retest_pass_count = self.retest_total_count = self.retest_pass_count = self.retest_count= 0
         self.files_count = 0
 
-
+        if os.path.isdir(pathdir):
+            self.files_list = [file for file in search_files_list(pathdir, suffix_list=['.csv', '.CSV', '.xlsx', '.XLSX']) if
+                          not file.startswith('~') or file.startswith('.')]
+            self.files_count = len(self.files_count)
+        elif os.path.isdir(pathdir):
+            self.files_list = [pathdir]
 
         if len(pathdir) > 0:
             if os.path.isdir(pathdir):
-                files_list = [file for file in search_files_list(pathdir, suffix_list=['.csv', '.CSV', '.xlsx', '.XLSX']) if not file.startswith('~') or file.startswith('.')]
                 self.files_count = len(files_list)
                 if isinstance(pbar[1], ttk.Progressbar):
                     root, bar = pbar
