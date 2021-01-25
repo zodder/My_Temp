@@ -31,6 +31,12 @@ Created on Fri Aug 21 11:37:16 2020
     1. Setup the main GUI for all the two functions
     2. Fix the issue when read some special csv file
     3. Add the function to read all csv, xlsx files in the defined folder
+@V0.2.25 2021/01/16
+    1. Fix one issue when facing the HEX data
+    2. add the progressbar in the data analyst
+@V0.2.26 2021/01/19
+    1. Add the function to export the failed parts csv list in output folder
+    2. fix one bug in folder description
 
 """
 
@@ -39,31 +45,31 @@ import tkinter as tk
 from Data_combiner import dataCombiner
 from OK2Ship_Reviewer import OK2D_Sorter
 
-#from plugin.TestWindow import MainWindow
+
+# from plugin.TestWindow import MainWindow
 
 class MainWindow(tk.Tk):
-    
-    def __init__(self):
 
+    def __init__(self):
         super().__init__()
 
         self.missing_list = []
-        self.title('Camera Test Data Assistant V0.2.24  --- Written by Amazon SQM Zhu Dan')
+        self.title('Camera Test Data Assistant V0.2.25  --- by Amazon Camera SQM')
         self.geometry('640x480+300+200')
-        
-        self.logo = tk.Label(self, text='Camera Test Data Assistant', font = ("微软雅黑", 24, "bold"))
-        self.writer_name = tk.Label(self, text='Written by Zhu Dan', font = ('Arial', 12, 'bold', 'italic'))
+
+        self.logo = tk.Label(self, text='Camera Test Data Assistant', font=("微软雅黑", 24, "bold"))
+        self.writer_name = tk.Label(self, text='By Amazon Camera SQM', font=('Arial', 12, 'bold', 'italic'))
         self.combiner_button = tk.Button(self, command=self.call_combiner,
-                                                      text="Data Combiner", font = ('Arial', 11), width=40)
-        self.sorter_button = tk.Button(self, command=self.call_sorter, 
-                                                      text='OK2Ship Reviewer', font = ('Arial', 11), width=40)
-        self.sfr_button = tk.Button(self, command=self.call_sfr_analyst, 
-                                                      text='SFR Analyst', font = ('Arial', 11), width=40, state= 'disabled')
-        self.blemish_button = tk.Button(self, command=self.call_blemish_coor_analyst, 
-                                                      text='Blemish Coordinate Analyst', font = ('Arial', 11), width=40, state= 'disabled')
-        self.quit_button = tk.Button(self, command=self.self_quit, text = "Quit", font = ('Arial', 10), width = 20)
-        
-        
+                                         text="Data Analysis", font=('Arial', 11), width=40)
+        self.sorter_button = tk.Button(self, command=self.call_sorter,
+                                       text='OK2Delivery Reviewer', font=('Arial', 11), width=40)
+        self.sfr_button = tk.Button(self, command=self.call_sfr_analyst,
+                                    text='SFR Analyst', font=('Arial', 11), width=40, state='disabled')
+        self.blemish_button = tk.Button(self, command=self.call_blemish_coor_analyst,
+                                        text='Blemish Coordinate Analyst', font=('Arial', 11), width=40,
+                                        state='disabled')
+        self.quit_button = tk.Button(self, command=self.self_quit, text="Quit", font=('Arial', 10), width=20)
+
         self.ui_arrange()
 
     def ui_arrange(self):
@@ -73,19 +79,19 @@ class MainWindow(tk.Tk):
         self.sorter_button.place(x=150, y=180)
         self.sfr_button.place(x=150, y=240)
         self.blemish_button.place(x=150, y=300)
-        
+
         self.quit_button.place(x=240, y=400)
-        
+
     def call_combiner(self):
         self.destroy()
         dC = dataCombiner()
         dC.wm_attributes('-topmost', 0)
         dC.mainloop()
-        
+
         sys.exit(0)
         # self.deiconify()
-        #self.wait_window(dC)
-        
+        # self.wait_window(dC)
+
     def call_sorter(self):
         self.destroy()
         Sorter = OK2D_Sorter()
@@ -94,13 +100,12 @@ class MainWindow(tk.Tk):
         # self.deiconify()
         sys.exit(0)
 
-    
     def call_sfr_analyst(self):
         pass
-    
+
     def call_blemish_coor_analyst(self):
         pass
-        
+
     def self_quit(self):
         self.destroy()
         sys.exit(0)
@@ -109,4 +114,3 @@ class MainWindow(tk.Tk):
 if __name__ == '__main__':
     MW = MainWindow()
     MW.mainloop()
-                

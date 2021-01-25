@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Camera Test Data Analyst 0.2.26 - By Amazon SQM</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>40</y>
+      <width>621</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei</family>
+      <pointsize>36</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Camera Test Data Analyst</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>140</y>
+      <width>241</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+      <italic>true</italic>
+     </font>
+    </property>
+    <property name="text">
+     <string>By Amazon Camera SQM</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>180</y>
+      <width>491</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>500</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Data Analysis</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>500</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>OK2Delivery Reviewer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>500</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>SFR Analyst</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>500</width>
+         <height>36</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Blemish Coordinate Analysis</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

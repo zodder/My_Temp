@@ -4,12 +4,9 @@
 import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as msgbox
-import tkinter.scrolledtext as tkst
-from tkinter import END
 from tkinter import ttk
 import sys
 import os
-import numpy as np
 from plugin.TestData import TestData, DataFigure
 from plugin.TestWindow import ErrorInfoList
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -19,15 +16,16 @@ import pandas as pd
 
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来显示中文标签
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
-# from matplotlib.figure import Figure
 
+
+# from matplotlib.figure import Figure
 # af_folder = r'C:\MyWork\Work\Python\Camera_data_analysis\2306819'
 
 
 class Bar(tk.Toplevel):
     def __init__(self):
         super().__init__()
-        
+
 
 class dataCombiner(tk.Tk):
     def __init__(self):
@@ -35,21 +33,21 @@ class dataCombiner(tk.Tk):
         super().__init__()
 
         self.missing_list = []
-        self.title('Camera Test Data combiner -- written by Zhu Dan')
+        self.title('Camera Test Data Analysis -- by Amazon Camera SQM')
         self.geometry('820x660+200+100')
 
         self.test_data_path = tk.StringVar()
         self.test_data_file = tk.StringVar()
         self.label_test_data_path = tk.Label(self, text='Test Data path:')
-        self.entry_test_data_path = tk.Entry(self, width=40, textvariable=self.test_data_path)
+        self.entry_test_data_path = tk.Entry(self, width=30, textvariable=self.test_data_path)
         self.label_test_data_file = tk.Label(self, text='Or Test Data File(csv or xlsx) path:')
-        self.entry_test_data_file = tk.Entry(self, width=40, textvariable=self.test_data_file)
+        self.entry_test_data_file = tk.Entry(self, width=30, textvariable=self.test_data_file)
         self.config_path_button = tk.Button(self, command=self.load_data_path, text="Path", width=8)
         self.config_file_button = tk.Button(self, command=self.load_data_file, text="Load", width=8)
         self.yield_model = tk.IntVar()
-        self.overall_yield_radio = tk.Radiobutton(self, text='Overall Yield', variable=self.yield_model,
+        self.overall_yield_radio = tk.Radiobutton(self, text='Raw Data', variable=self.yield_model,
                                                   command=self.refresh_data, value=1)
-        self.final_yield_radio = tk.Radiobutton(self, text='Final Product Yield', variable=self.yield_model,
+        self.final_yield_radio = tk.Radiobutton(self, text='Final Pass Yield', variable=self.yield_model,
                                                 command=self.refresh_data, value=2)
         self.first_yield_radio = tk.Radiobutton(self, text='First Pass Yield', variable=self.yield_model,
                                                 command=self.refresh_data, value=3)
@@ -71,8 +69,8 @@ class dataCombiner(tk.Tk):
     def ui_arrange(self):
         self.label_test_data_path.place(x=40, y=40)
         self.label_test_data_file.place(x=40, y=80)
-        self.entry_test_data_path.place(x=240, y=40)
-        self.entry_test_data_file.place(x=240, y=80)
+        self.entry_test_data_path.place(x=250, y=40)
+        self.entry_test_data_file.place(x=250, y=80)
         self.config_path_button.place(x=500, y=35)
         self.config_file_button.place(x=500, y=75)
         # self.screen_retest_check.place(x=600, y=40)
@@ -88,7 +86,6 @@ class dataCombiner(tk.Tk):
         self.split_station_fixture_button.place(x=160, y=580)
         self.retest_data_button.place(x=360, y=580)
         self.quit_button.place(x=520, y=580)
-        
 
     def merge_data(self):
         '''
@@ -100,6 +97,7 @@ class dataCombiner(tk.Tk):
         self.yield_df = pd.DataFrame()
         pathdir = self.test_data_path.get()
         filepath = self.test_data_file.get()
+        self.big_raw_data = TestData()
         if len(pathdir) == 0 and len(filepath) == 0:
             msgbox.showerror(title='Hi', message='No data resource is input')
         elif len(pathdir) > 0 and len(filepath) > 0:
@@ -107,10 +105,10 @@ class dataCombiner(tk.Tk):
         else:
             if len(pathdir) > 0 and len(filepath) == 0:
                 self.progress.place(x=30, y=620)
-                self.big_raw_data = TestData(pathdir=pathdir, pbar = (self, self.progress))
-                
+                self.big_raw_data.read_data_from_files(pathdir=pathdir, tk_pbar=(self, self.progress))
+
             elif len(pathdir) == 0 and len(filepath) > 0:
-                self.big_raw_data = TestData(pathdir=filepath)
+                self.big_raw_data.read_data_from_files(pathdir=filepath, tk_pbar=(self, self.progress))
             self.refresh_data()
 
             msgbox.showinfo(title=None,
@@ -118,7 +116,6 @@ class dataCombiner(tk.Tk):
                                     % (len(self.big_raw_data.read_file_list), len(self.big_raw_data.wrong_file_list)))
             if len(self.big_raw_data.wrong_file_list) > 0:
                 error_file_window = ErrorInfoList(desc_label='Error file names list:')
-                
                 error_file_window.title('Read Error Files')
                 error_file_window.input_text(self.big_raw_data.wrong_file_list)
                 self.wait_window(error_file_window)
@@ -127,17 +124,18 @@ class dataCombiner(tk.Tk):
 
     def refresh_data(self):
         yield_model = self.yield_model.get()
+        self.raw_data = TestData()
         if yield_model == 2:
-            self.raw_data = TestData(raw_data=self.big_raw_data.screen(inplace=False),
-                                     spec=self.big_raw_data.spec, head_rows=self.big_raw_data.head_rows)
+            self.raw_data.read_data_from_pd(raw_data=self.big_raw_data.screen(inplace=False),
+                                            spec=self.big_raw_data.spec, head_rows=self.big_raw_data.head_rows)
         elif yield_model == 1:
-            self.raw_data = TestData(raw_data=self.big_raw_data.value,
-                                     spec=self.big_raw_data.spec, head_rows=self.big_raw_data.head_rows)
-            self.raw_data.calc_yield()
+            self.raw_data.read_data_from_pd(raw_data=self.big_raw_data.value,
+                                            spec=self.big_raw_data.spec, head_rows=self.big_raw_data.head_rows)
         elif yield_model == 3:
-            self.raw_data = TestData(raw_data=self.big_raw_data.screen(inplace=False, how='first'),
-                                     spec=self.big_raw_data.spec, head_rows=self.big_raw_data.head_rows)
-
+            self.raw_data.read_data_from_pd(raw_data=self.big_raw_data.screen(inplace=False, how='first'),
+                                            spec=self.big_raw_data.spec, head_rows=self.big_raw_data.head_rows)
+        self.raw_data.calc_parameters()
+        self.raw_data.calc_yield()
         self.show_yield_pareto()
 
         # print(self.raw_data.stat_sum)
@@ -149,10 +147,10 @@ class dataCombiner(tk.Tk):
                                message='Retest data are not included, please select "Overall yield model"')
         else:
             self.raw_data.calc_retest()
-            retest_times = self.raw_data.retest_sum['Retest_times']
+            retest_times = self.raw_data.retest_sum['Test_times']
             retest_fig = DataFigure(axsize=[0.1, 0.1, 0.8, 0.8], figsize=(6, 5), dpi=60)
-            retest_fig.hist_bar(input_data=retest_times, range=(3, retest_times.max()))
-            retest_fig.ax.set_xlabel('Retest times', fontsize=12)
+            retest_fig.hist_bar(input_data=retest_times, range=(3, retest_times.max()), bins=retest_times.max()-3+1)
+            retest_fig.ax.set_xlabel('Test times', fontsize=12)
             retest_fig.ax.set_ylabel('Module count', fontsize=12)
             retest_fig.set_title('Retest Analysis')
 
@@ -195,7 +193,7 @@ class dataCombiner(tk.Tk):
             s_id_list = s_id.split('\n')
             if s_id_list[-1] == '':
                 s_id_list.remove('')
-            s_id_list = [single_id.replace("'","") for single_id in s_id_list]
+            s_id_list = [single_id.replace("'", "") for single_id in s_id_list]
         elif os.path.splitext(search_list_path)[1] in ['.csv', '.CSV', '.XLS', '.xls', '.xlsx', 'XLSX']:
             new_device_list = TestData(pathdir=search_list_path)
             s_id_list = list(new_device_list.uni_serial)
@@ -203,6 +201,7 @@ class dataCombiner(tk.Tk):
         msgbox.showinfo(title=None, message='Total %d seiral IDs are loaded' % len(s_id_list))
         # self.raw_data.missing_list = self.raw_data.search_id(s_id_list, inplace=True)
         self.raw_data.search_id(s_id_list)
+        self.raw_data.calc_parameters()
         self.raw_data.calc_yield()
         self.show_yield_pareto()
         # print(self.missing_list)
@@ -253,12 +252,11 @@ class dataCombiner(tk.Tk):
         canvas_pareto.get_tk_widget().place(x=20, y=120)
 
         main_yield_fig = DataFigure(figsize=(6, 1), dpi=60, axsize=[0.18, 0.05, 0.75, 0.9])
-        main_yield_fig.yield_bar(input_data={'Whole Yield': self.raw_data.yield_value})
+        main_yield_fig.yield_bar(input_data={'Yield': self.raw_data.yield_value})
 
         canvas_main_yield = FigureCanvasTkAgg(main_yield_fig.fig, master=self)
         canvas_main_yield.draw()
         canvas_main_yield.get_tk_widget().place(x=400, y=120)
-
 
     def hide_yield_bar(self):
         pass
