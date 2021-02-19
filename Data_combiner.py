@@ -149,7 +149,11 @@ class dataCombiner(tk.Tk):
             self.raw_data.calc_retest()
             retest_times = self.raw_data.retest_sum['Test_times']
             retest_fig = DataFigure(axsize=[0.1, 0.1, 0.8, 0.8], figsize=(6, 5), dpi=60)
-            retest_fig.hist_bar(input_data=retest_times, range=(3, retest_times.max()), bins=retest_times.max()-3+1)
+            bins = retest_times.max() - 3 +1
+            if bins >= 1:
+                retest_fig.hist_bar(input_data=retest_times, range=(3, retest_times.max()), bins=retest_times.max()-3+1)
+            else:
+                msgbox.showwarning(title='warning', message='No >=3 retest times parts could be found!')
             retest_fig.ax.set_xlabel('Test times', fontsize=12)
             retest_fig.ax.set_ylabel('Module count', fontsize=12)
             retest_fig.set_title('Retest Analysis')

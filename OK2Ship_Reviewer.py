@@ -380,7 +380,7 @@ class OK2D_Sorter(tk.Tk):
                         log_print(datalog, 'Some repeating serial IDs could be found in the ok2ship list:')
                         for each_id in self.OK2SHIP.retest_serial:
                             log_print(datalog, each_id + '\n')
-                            self.screen_list.append([each_id, 'OK2Ship list', 'Repeating id in shipping list'])
+                            self.screen_list.append(["'"+str(each_id), 'OK2Ship list', 'Repeating id in shipping list'])
                     else:
                         log_print(datalog, 'All parts in ok2ship list are unique, no repeating parts\n')
                     log_print(datalog, '\n')
@@ -398,6 +398,7 @@ class OK2D_Sorter(tk.Tk):
                                 comp_name, str(comp_data['link'])))
                             Comp_RawData = TestData()  # str(comp_data['link']), print_file_name=False)
                             Comp_RawData.read_data_from_files(pathdir=str(comp_data['link']), ifPrintName=False)
+                            Comp_RawData.calc_parameters()
 
                             if len(Comp_RawData.value) == 0:
                                 msgbox.showerror(title=None,
@@ -426,7 +427,7 @@ class OK2D_Sorter(tk.Tk):
                                     if single_id not in Comp_RawData.uni_serial:
                                         log_print(datalog, '%s module is not in the parts list of stage %s!\n' % (
                                             str(single_id), comp_name))
-                                        self.screen_list.append([single_id, comp_name, 'No record in test history'])
+                                        self.screen_list.append(["'"+str(single_id), comp_name, 'No record in test history'])
                                         # stage_issue_part_list.append(single_id)
                                     else:
                                         last_test_result = Comp_RawData.last_result(single_id)
@@ -435,7 +436,7 @@ class OK2D_Sorter(tk.Tk):
                                             if allowed_retest > 0 and test_times > allowed_retest:
                                                 # stage_issue_part_list.append(single_id)
                                                 self.screen_list.append(
-                                                    [single_id, comp_name, 'Exceed the test times limits(%d vs %d)' % (
+                                                    ["'"+str(single_id), comp_name, 'Exceed the test times limits(%d vs %d)' % (
                                                     test_times, allowed_retest)])
                                                 log_print(datalog,
                                                           '%s test for %d times, exceeded the maximum test times allowed: %d\n' % (
@@ -448,7 +449,7 @@ class OK2D_Sorter(tk.Tk):
                                                         single_test_log[0], single_test_log[1]))
                                                 log_print(datalog, '\n')
                                         else:
-                                            self.screen_list.append([single_id, comp_name, 'Final result is NG'])
+                                            self.screen_list.append(["'"+str(single_id), comp_name, 'Final result is NG'])
                                             # stage_issue_part_list.append(single_id)
                                             log_print(datalog, "%s's test result is not PASS in stage %s!\n" % (
                                                 str(single_id), comp_name))

@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import csv
 from tkinter import ttk
 
-####### define the default columns names useed in the test data ############
+####### define the default columns names used in the test data ############
 serial_id = 'serial_id'
 station_id = 'station'
 fixture_id = 'fixture_id'
@@ -28,17 +28,18 @@ start_time = 'start_time'
 ############################################################################
 
 
-def search_files_list(pathdir, suffix_list=[]):
+def search_files_list(pathdir, suffix_list=[], walkinfolder=True):
     file_list = []
-    for root, folders, files in os.walk(pathdir):
-        if len(suffix_list) > 0:
-            for file in files:
-                if os.path.splitext(file)[1] in suffix_list:
+    if walkinfolder:
+        for root, folders, files in os.walk(pathdir):
+            if len(suffix_list) > 0:
+                for file in files:
+                    if os.path.splitext(file)[1] in suffix_list:
+                        file_list.append(os.path.join(root, file))
+            else:
+                for file in files:
                     file_list.append(os.path.join(root, file))
-        else:
-            for file in files:
-                file_list.append(os.path.join(root, file))
-    return file_list
+        return file_list
 
 
 def sort_dict(yield_dict, keep_count=7):
@@ -277,11 +278,12 @@ class TestData:
             root.update()
 
     def calc_parameters(self):
+        self.value.drop_duplicates(keep='first', inplace=True)
         self.count = len(self.value)  # data数量总记录
         if len(self.value) > 0:
             # 按照测试时间start_time升序排列
             if start_time in self.value.columns:
-                self.value.sort_values(by=[start_time])
+                self.value.sort_values(by=[start_time], inplace=True)
             else:
                 print('No start time, so the data will not be sorted')
 
@@ -379,7 +381,7 @@ class TestData:
             else:
                 self.pass_count = 0
 
-            if self.count != 0:
+            if self.count != 0 and 'PASS' in self.test_results.keys():
                 self.yield_value = self.test_results[pass_bin] / self.count
             else:
                 self.yield_value = 0
@@ -450,21 +452,29 @@ class TestData:
             DESCRIPTION.
 
         Returns
+        return_results: [0] test pass or fail
         -------
         return the result of a single serial ID, which contains below information
 
         '''
-
+        #self.value.sort_values(by=[start_time])
         target_id = target_id.replace("'", "")
         test_results = self.value.loc[self.value[serial_id] == target_id].copy()
-        last_result = test_results.drop_duplicates(subset=serial_id, keep='last')
+
+        if start_time in test_results.columns:
+            test_results.sort_values(by=[start_time], ascending=False)
+
         test_times = len(test_results)
+        last_result = test_results.drop_duplicates(subset=serial_id, keep='last')
+        #last_result = test_results.iloc[len(test_results)-1]
+
         return_results = []
 
         if test_result in last_result.columns and test_times > 0:
             last_test_result = str(last_result[test_result].values[0])
         else:
             last_test_result = 'NA'
+
         return_results.append(last_test_result)
         if start_time in last_result.columns and test_times > 0:
             last_test_time = str(last_result[start_time].values[0])

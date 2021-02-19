@@ -37,6 +37,10 @@ Created on Fri Aug 21 11:37:16 2020
 @V0.2.26 2021/01/19
     1. Add the function to export the failed parts csv list in output folder
     2. fix one bug in folder description
+@V0.2.27 2021/01/29
+    1. Fix the bug of non-workable sorting function
+@V0.2.28 2021/02/02
+    1. Fix the bug of showing histogram which have very few retest times
 
 """
 
@@ -47,6 +51,7 @@ from OK2Ship_Reviewer import OK2D_Sorter
 
 
 # from plugin.TestWindow import MainWindow
+Version_id= "0.0.28"
 
 class MainWindow(tk.Tk):
 
@@ -54,7 +59,7 @@ class MainWindow(tk.Tk):
         super().__init__()
 
         self.missing_list = []
-        self.title('Camera Test Data Assistant V0.2.25  --- by Amazon Camera SQM')
+        self.title('Camera Test Data Assistant V%s  --- by Amazon Camera SQM' % Version_id)
         self.geometry('640x480+300+200')
 
         self.logo = tk.Label(self, text='Camera Test Data Assistant', font=("微软雅黑", 24, "bold"))
